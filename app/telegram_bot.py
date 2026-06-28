@@ -20,7 +20,7 @@ from telegram.ext import (
     filters,
 )
 
-from config import TELEGRAM_BOT_TOKEN, BOSS_CHAT_ID
+from config import TELEGRAM_BOT_TOKEN, BOSS_CHAT_ID, EVE_VERSION
 from workflow import WorkflowEngine
 
 
@@ -33,7 +33,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
 
     await update.message.reply_text(
-        "Hello, I am EVE.\n\n"
+        f"🤖 EVE v{EVE_VERSION}\n"
+        "The Local AI Operating System for SMEs\n\n"
+        "Welcome!\n\n"
         "Send me a boss instruction and I will convert it into a clear employee task.\n\n"
         "Employees can reply DONE after completing an assigned task."
     )
@@ -225,6 +227,6 @@ def run_bot():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(handle_confirmation))
 
-    print("🚀 EVE Telegram Bot is running...")
+    print(f"🚀 EVE v{EVE_VERSION} Telegram Bot is running...")
 
     app.run_polling()
