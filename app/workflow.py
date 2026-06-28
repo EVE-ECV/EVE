@@ -5,9 +5,9 @@ Coordinates incoming messages, task parsing,
 employee lookup, session creation, and workflow responses.
 """
 
-from task_parser import parse_task
-from session import SessionManager
-from employee_directory import EmployeeDirectory
+from app.task_parser import parse_task
+from app.session import SessionManager
+from app.employee_directory import EmployeeDirectory
 
 
 class WorkflowEngine:
