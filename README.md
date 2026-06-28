@@ -104,6 +104,15 @@ Recommended local models:
 
 This project is currently in early development.
 
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Installation Guide](docs/installation.md)
+- [Roadmap](docs/roadmap.md)
+- [Philosophy](docs/philosophy.md)
+- [Naming Direction](docs/naming.md)
+- [Contributing](CONTRIBUTING.md)
+
 ## About Evercrew
 
 Evercrew Venture Pte Ltd helps Singapore SMEs deploy practical AI workflow automation, local LLM tools, AI assistants, and business automation systems.
