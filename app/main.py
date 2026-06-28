@@ -4,13 +4,17 @@ EVE
 Application Entry Point
 """
 
-from config import COMPANY_NAME, OLLAMA_MODEL
+from config import (
+    COMPANY_NAME,
+    OLLAMA_MODEL,
+    EVE_VERSION,
+)
 from telegram_bot import run_bot
 
 
 def main():
     print("=" * 50)
-    print("EVE")
+    print(f"EVE v{EVE_VERSION}")
     print("The Local AI Operating System for SMEs")
     print("=" * 50)
     print(f"Built by      : {COMPANY_NAME}")
