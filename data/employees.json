@@ -14,14 +14,4 @@
         "name": "Johnson",
         "telegram_chat_id": 555555555
     }
-]{
-    "ah tan": {
-        "telegram_chat_id": "123456789"
-    },
-    "mary": {
-        "telegram_chat_id": "987654321"
-    },
-    "johnson": {
-        "telegram_chat_id": "555555555"
-    }
-}
+]
