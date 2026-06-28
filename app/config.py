@@ -17,3 +17,5 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
 
 COMPANY_NAME = os.getenv("COMPANY_NAME", "Evercrew Venture Pte Ltd")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+
+EVE_VERSION = "0.1.0"
