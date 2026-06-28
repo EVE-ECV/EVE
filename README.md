@@ -1,6 +1,44 @@
-# Evercrew Local Telegram Task Bot
+# EVE
 
-A free local LLM Telegram workflow that helps SME bosses turn messy instructions into clear employee tasks.
+## The Local AI Operating System for SMEs
+
+Built by **Evercrew Venture Pte Ltd**
+
+---
+
+EVE is an open-source, local-first AI workflow platform designed to help SMEs automate everyday business operations using practical AI and small language models.
+
+Unlike traditional chatbots, EVE focuses on real business workflows:
+
+- Task Assignment
+- Meeting Summaries
+- Email Processing
+- Customer Enquiries
+- Sales Follow-up
+- Internal Approvals
+- Business Operations
+
+Run locally.
+
+Keep your data private.
+
+Own your intelligence.
+
+---
+
+## Why EVE?
+
+Most SMEs don't need another chatbot.
+
+They need an AI operating system that helps their business run more efficiently.
+
+EVE provides modular AI workflows that are:
+
+- Local-first
+- Human-in-the-loop
+- Easy to install
+- Easy to understand
+- Enterprise ready
 
 Built by **Evercrew Venture Pte Ltd**, Singapore.
 
