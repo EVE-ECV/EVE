@@ -46,10 +46,12 @@ TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
 OLLAMA_MODEL=llama3.2:3b
 ```
 
-## Step 5: Run EVE
+## Step 5: Test EVE without Telegram
+
+Before connecting Telegram, test the workflow locally:
 
 ```bash
-python app/main.py
+python app/test_workflow.py
 ```
 
 ## Current Status
