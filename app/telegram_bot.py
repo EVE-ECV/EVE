@@ -20,7 +20,7 @@ from telegram.ext import (
     filters,
 )
 
-from config import TELEGRAM_BOT_TOKEN
+from config import TELEGRAM_BOT_TOKEN, BOSS_CHAT_ID
 from workflow import WorkflowEngine
 
 
@@ -46,37 +46,41 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     message = update.message.text.strip()
 
-    # Employee completion flow
     if message.upper() == "DONE":
 
-        employee_name = update.effective_user.first_name
-
-        result = engine.complete_task(employee_name)
+        chat_id = update.effective_chat.id
+        result = engine.complete_task_by_chat_id(chat_id)
 
         if result["status"] == "completed":
 
             task = result["task"]
+            employee = result["employee"]
 
             await update.message.reply_text(
                 "✅ Task marked as completed.\n\n"
                 "Your boss has been notified."
             )
 
-            # Boss notification will be improved in the next step.
-            print(
-                f"Task completed by {employee_name}: "
-                f"{task['task']}"
-            )
+            if BOSS_CHAT_ID:
+                boss_message = (
+                    "✅ Task Completed\n\n"
+                    f"👤 Employee: {employee['name']}\n"
+                    f"📝 Task: {task['task']}\n"
+                    f"📅 Deadline: {task['deadline']}\n"
+                    f"⚡ Priority: {task['priority']}\n\n"
+                    f"📖 Summary:\n{task['summary']}"
+                )
+
+                await context.bot.send_message(
+                    chat_id=BOSS_CHAT_ID,
+                    text=boss_message
+                )
 
         else:
-
-            await update.message.reply_text(
-                result["message"]
-            )
+            await update.message.reply_text(result["message"])
 
         return
 
-    # Boss instruction flow
     result = engine.process_message(message)
 
     task = result["task"]
@@ -217,25 +221,9 @@ def run_bot():
         TELEGRAM_BOT_TOKEN
     ).build()
 
-    app.add_handler(
-        CommandHandler(
-            "start",
-            start
-        )
-    )
-
-    app.add_handler(
-        MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
-            handle_message
-        )
-    )
-
-    app.add_handler(
-        CallbackQueryHandler(
-            handle_confirmation
-        )
-    )
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CallbackQueryHandler(handle_confirmation))
 
     print("🚀 EVE Telegram Bot is running...")
 
