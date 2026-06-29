@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/eve-mascot.png" width="260" alt="EVE - Local AI Operating System">
+  <img src="./eve-mascot.png" width="260" alt="EVE Mascot">
 </p>
 
 <h1 align="center">EVE</h1>
