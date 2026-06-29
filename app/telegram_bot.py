@@ -221,8 +221,3 @@ def run_bot():
     print(f"🚀 EVE v{EVE_VERSION} Telegram Bot is running...")
 
     app.run_polling()
-
-Final line must be exactly:
-
-```python
-app.run_polling()
