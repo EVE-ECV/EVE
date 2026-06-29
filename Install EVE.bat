@@ -15,8 +15,38 @@ echo Welcome!
 echo.
 echo This installer will prepare EVE on your Windows computer.
 echo.
-echo Please do not close this window until installation finishes.
+echo =====================================================
+echo BEFORE WE BEGIN
+echo =====================================================
 echo.
+echo EVE will be installed inside its own private folder.
+echo.
+echo It will NOT:
+echo.
+echo   - Change your Windows settings
+echo   - Replace your Python installation
+echo   - Affect your other Python projects
+echo   - Affect software such as Aider
+echo.
+echo EVE uses its own private Python environment
+echo called ".venv", which keeps everything separate
+echo from the rest of your computer.
+echo.
+echo This means you can remove the EVE folder later
+echo without affecting your other software.
+echo.
+echo During installation you may see technical messages.
+echo.
+echo This is normal.
+echo If the installer finishes with:
+echo.
+echo     INSTALLATION COMPLETED SUCCESSFULLY
+echo.
+echo then EVE has been installed correctly.
+echo.
+echo Press any key to begin installation...
+pause >nul
+cls
 
 :: ----------------------------------------------------
 :: STEP 1 - CHECK PYTHON
