@@ -1,8 +1,9 @@
 """
 Workflow Engine
 
-Coordinates incoming messages, task parsing,
-employee lookup, session creation, and workflow responses.
+Coordinates boss task creation, employee lookup,
+confirmation sessions, task assignment, cancellation,
+and employee completion.
 """
 
 from app.task_parser import parse_task
@@ -22,9 +23,17 @@ class WorkflowEngine:
         a confirmation session.
         """
 
+        if not message or not message.strip():
+            return {
+                "status": "error",
+                "message": "Message is empty."
+            }
+
         task = parse_task(message)
 
-        employee_record = self.employee_directory.find_by_name(task.employee)
+        employee_record = self.employee_directory.find_by_name(
+            task.employee
+        )
 
         session_id = self.sessions.create(task)
 
@@ -51,7 +60,26 @@ class WorkflowEngine:
 
         task = session["task"]
 
-        employee_record = self.employee_directory.find_by_name(task.employee)
+        employee_record = self.employee_directory.find_by_name(
+            task.employee
+        )
+
+        if not employee_record:
+            return {
+                "status": "error",
+                "message": (
+                    "Employee not found in employees.json. "
+                    "Please check the employee name."
+                )
+            }
+
+        if not employee_record.get("telegram_chat_id"):
+            return {
+                "status": "error",
+                "message": (
+                    "Employee Telegram Chat ID is missing in employees.json."
+                )
+            }
 
         self.sessions.update_state(
             session_id,
@@ -85,15 +113,18 @@ class WorkflowEngine:
 
         return {
             "status": "cancelled",
-            "session_id": session_id
+            "session_id": session_id,
+            "message": "Task cancelled."
         }
 
     def complete_task_by_chat_id(self, chat_id: int):
         """
-        Mark the assigned task for a Telegram user as completed.
+        Mark the assigned task for a Telegram employee as completed.
         """
 
-        employee_record = self.employee_directory.find_by_chat_id(chat_id)
+        employee_record = self.employee_directory.find_by_chat_id(
+            chat_id
+        )
 
         if not employee_record:
             return {
@@ -124,3 +155,17 @@ class WorkflowEngine:
             "employee": employee_record,
             "task": session["task"].model_dump()
         }
+
+    def get_employee_by_chat_id(self, chat_id: int):
+        """
+        Get employee record using Telegram Chat ID.
+        """
+
+        return self.employee_directory.find_by_chat_id(chat_id)
+
+    def get_employee_by_name(self, name: str):
+        """
+        Get employee record using employee name.
+        """
+
+        return self.employee_directory.find_by_name(name)
