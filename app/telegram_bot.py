@@ -35,10 +35,6 @@ engine = WorkflowEngine()
 
 
 def normalize_chat_id(chat_id):
-    """
-    Convert chat IDs to integers safely.
-    """
-
     if chat_id is None:
         return None
 
@@ -49,52 +45,28 @@ def normalize_chat_id(chat_id):
 
 
 def get_boss_chat_id():
-    """
-    Return the boss chat ID from config.
-    """
-
     return normalize_chat_id(BOSS_CHAT_ID)
 
 
 def is_boss(chat_id: int) -> bool:
-    """
-    Check whether the sender is the boss.
-    """
-
     return normalize_chat_id(chat_id) == get_boss_chat_id()
 
 
 def get_employee_by_chat_id(chat_id: int):
-    """
-    Find employee record by Telegram chat ID.
-    """
-
     return engine.employee_directory.find_by_chat_id(
         normalize_chat_id(chat_id)
     )
 
 
 def is_employee(chat_id: int) -> bool:
-    """
-    Check whether the sender is a registered employee.
-    """
-
     return get_employee_by_chat_id(chat_id) is not None
 
 
-def get_completed_time_text():
-    """
-    Return current local time in a friendly format.
-    """
-
+def get_time_text():
     return datetime.now().strftime("%I:%M %p").lstrip("0")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Handle the /start command.
-    """
-
     chat_id = update.effective_chat.id
 
     if is_boss(chat_id):
@@ -115,6 +87,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🤖 EVE v{EVE_VERSION}\n\n"
             f"Welcome, {employee['name']}.\n\n"
             "You will receive task notifications here.\n\n"
+            "You may reply with updates or questions.\n\n"
             "When a task is completed, reply:\n\n"
             "DONE"
         )
@@ -130,10 +103,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Route incoming Telegram messages based on user role.
-    """
-
     if not update.message or not update.message.text:
         return
 
@@ -156,10 +125,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_id_request(update: Update):
-    """
-    Show Telegram Chat ID.
-    """
-
     chat_id = update.effective_chat.id
     user = update.effective_user
 
@@ -181,11 +146,6 @@ async def handle_boss_message(
     context: ContextTypes.DEFAULT_TYPE,
     message: str
 ):
-    """
-    Handle Boss messages only.
-    Boss can create and assign tasks.
-    """
-
     if message.upper() == "DONE":
         await update.message.reply_text(
             "Boss mode is active.\n\n"
@@ -209,10 +169,6 @@ async def handle_boss_message(
 
 
 async def send_task_preview(update: Update, result: dict):
-    """
-    Send task preview to Boss with Assign / Cancel buttons.
-    """
-
     task = result["task"]
     session_id = result["session_id"]
     employee_record = result.get("employee_record")
@@ -232,9 +188,17 @@ async def send_task_preview(update: Update, result: dict):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
+    employee_display = task["employee"]
+
+    if employee_record and employee_record.get("employee_id"):
+        employee_display = (
+            f"{employee_record['name']} "
+            f"({employee_record['employee_id']})"
+        )
+
     reply = (
         "📋 Task Preview\n\n"
-        f"Employee:\n{task['employee']}\n\n"
+        f"Employee:\n{employee_display}\n\n"
         f"Task:\n{task['task']}\n\n"
         f"Deadline:\n{task['deadline']}\n\n"
         f"Priority:\n{task['priority']}\n\n"
@@ -265,21 +229,26 @@ async def handle_employee_message(
     context: ContextTypes.DEFAULT_TYPE,
     message: str
 ):
-    """
-    Handle Employee messages only.
-    Employees can only reply DONE.
-    """
+    chat_id = update.effective_chat.id
+    employee = get_employee_by_chat_id(chat_id)
 
-    if message.upper() != "DONE":
-        await update.message.reply_text(
-            "I received your message.\n\n"
-            "For now, EVE only accepts this reply from employees:\n\n"
-            "DONE\n\n"
-            "Please reply DONE when your assigned task is completed."
-        )
+    if message.upper() == "DONE":
+        await handle_employee_done(update, context, chat_id)
         return
 
-    chat_id = update.effective_chat.id
+    await forward_employee_message_to_boss(
+        update=update,
+        context=context,
+        employee=employee,
+        message=message
+    )
+
+
+async def handle_employee_done(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    chat_id: int
+):
     result = engine.complete_task_by_chat_id(chat_id)
 
     if result["status"] != "completed":
@@ -291,7 +260,7 @@ async def handle_employee_message(
 
     task = result["task"]
     employee = result["employee"]
-    completed_at = get_completed_time_text()
+    completed_at = get_time_text()
 
     await update.message.reply_text(
         "✅ Thank you.\n\n"
@@ -306,16 +275,57 @@ async def handle_employee_message(
     )
 
 
+async def forward_employee_message_to_boss(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    employee: dict,
+    message: str
+):
+    boss_chat_id = get_boss_chat_id()
+
+    if not boss_chat_id:
+        await update.message.reply_text(
+            "⚠ I received your message, but the Boss Chat ID is not configured."
+        )
+        return
+
+    employee_name = employee.get("name", "Unknown employee")
+    employee_id = employee.get("employee_id", "No employee ID")
+    sent_at = get_time_text()
+
+    boss_message = (
+        "💬 Employee Reply\n\n"
+        f"Employee:\n{employee_name} ({employee_id})\n\n"
+        f"Message:\n{message}\n\n"
+        f"Received at:\n{sent_at}"
+    )
+
+    try:
+        await context.bot.send_message(
+            chat_id=boss_chat_id,
+            text=boss_message
+        )
+
+        await update.message.reply_text(
+            "✅ Noted.\n\n"
+            "I have forwarded your message to your boss.\n\n"
+            "When the task is completed, reply:\n\n"
+            "DONE"
+        )
+
+    except Exception as e:
+        await update.message.reply_text(
+            "⚠ I received your message but could not forward it to your boss.\n\n"
+            f"Reason:\n{str(e)}"
+        )
+
+
 async def send_boss_completion_notification(
     context: ContextTypes.DEFAULT_TYPE,
     employee: dict,
     task: dict,
     completed_at: str
 ):
-    """
-    Notify Boss that employee completed the task.
-    """
-
     boss_chat_id = get_boss_chat_id()
 
     if not boss_chat_id:
@@ -335,10 +345,6 @@ async def send_boss_completion_notification(
 
 
 async def handle_unknown_user(update: Update):
-    """
-    Handle users who are not Boss or registered Employees.
-    """
-
     await update.message.reply_text(
         "You are not registered in this EVE system.\n\n"
         "Please contact your administrator.\n\n"
@@ -348,11 +354,6 @@ async def handle_unknown_user(update: Update):
 
 
 async def handle_confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Handle Assign and Cancel button clicks.
-    Only Boss is allowed to use these buttons.
-    """
-
     query = update.callback_query
     await query.answer()
 
@@ -390,10 +391,6 @@ async def handle_assign_confirmation(
     context: ContextTypes.DEFAULT_TYPE,
     session_id: str
 ):
-    """
-    Confirm task assignment and notify employee.
-    """
-
     result = engine.confirm_task(session_id)
 
     if result["status"] != "assigned":
@@ -423,6 +420,7 @@ async def handle_assign_confirmation(
         f"Task:\n{task['task']}\n\n"
         f"Deadline:\n{task['deadline']}\n\n"
         f"Priority:\n{task['priority']}\n\n"
+        "You may reply with questions or updates.\n\n"
         "Reply:\n\n"
         "DONE\n\n"
         "when completed."
@@ -447,10 +445,6 @@ async def handle_assign_confirmation(
 
 
 async def handle_cancel_confirmation(query, session_id: str):
-    """
-    Cancel task assignment.
-    """
-
     result = engine.cancel_task(session_id)
 
     if result["status"] == "cancelled":
@@ -464,10 +458,6 @@ async def handle_cancel_confirmation(query, session_id: str):
 
 
 def run_bot():
-    """
-    Start the Telegram bot.
-    """
-
     if not TELEGRAM_BOT_TOKEN:
         raise ValueError(
             "TELEGRAM_BOT_TOKEN is missing. Please update your .env file."
