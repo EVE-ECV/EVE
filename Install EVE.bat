@@ -119,19 +119,17 @@ if not exist .venv (
 echo Creating EVE private folder...
 python -m venv .venv
 
-```
 if errorlevel 1 (
-    color 0C
-    echo.
-    echo ERROR:
-    echo Failed to create EVE private folder.
-    echo.
-    echo Please check your Python installation and try again.
-    echo.
-    pause
-    exit /b 1
+color 0C
+echo.
+echo ERROR:
+echo Failed to create EVE private folder.
+echo.
+echo Please check your Python installation and try again.
+echo.
+pause
+exit /b 1
 )
-```
 
 ) else (
 echo Existing EVE private folder found.
