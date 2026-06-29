@@ -1,5 +1,5 @@
 ============================================================
-EVE v0.1 Alpha
+EVE v0.1.0 Alpha
 The Local AI Operating System for SMEs
 Evercrew Venture Pte Ltd, Singapore
 ===================================
@@ -16,13 +16,13 @@ It contains a step-by-step illustrated guide with screenshots.
 You can always return to this text guide if needed.
 
 ============================================================
-
 WELCOME!
+========
 
-Thank you for trying EVE.
+Thank you for downloading EVE.
 
 This guide is written for beginners.
-You do NOT need any programming experience.
+No programming experience is required.
 
 Simply follow the steps below.
 
@@ -79,6 +79,8 @@ The installer will automatically:
 • Install the required Python packages
 • Create the .env file (if needed)
 
+The installer will guide you through the setup automatically.
+
 ============================================================
 STEP 5 - Create Your Telegram Bot
 =================================
@@ -107,6 +109,8 @@ At minimum, update:
 
 BOT_TOKEN=YOUR_TELEGRAM_BOT_TOKEN
 
+Save the file.
+
 ============================================================
 STEP 7 - Add Your Employees
 ===========================
@@ -127,7 +131,8 @@ Double-click:
 
 Start EVE.bat
 
-If everything is configured correctly, EVE will start.
+If everything is configured correctly,
+EVE will start and wait for Telegram messages.
 
 IMPORTANT:
 
@@ -154,8 +159,13 @@ Congratulations!
 
 Your first local AI workflow is now running.
 
+For screenshots and a visual installation guide,
+please refer to:
+
+QUICK START.pdf
+
 ============================================================
-Need Help?
+NEED HELP?
 ==========
 
 Website:
@@ -168,14 +178,20 @@ GitHub:
 https://github.com/EVE-ECV/EVE
 
 ============================================================
-Thank You
+THANK YOU
 =========
 
-EVE is an open-source project by:
+EVE is an open-source project developed by:
 
 Evercrew Venture Pte Ltd
 Singapore
 
-We hope EVE helps SMEs adopt practical, private and affordable AI.
+Our mission is to help SMEs adopt practical,
+private, secure, and affordable local AI solutions.
+
+Thank you for supporting the EVE open-source project.
 
 Happy building!
+
+Version:
+EVE v0.1.0 Alpha
