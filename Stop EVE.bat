@@ -12,16 +12,14 @@ echo.
 echo =====================================================
 echo.
 
-echo EVE is currently a desktop application.
+echo EVE is currently running in its own window.
 echo.
-echo It does not run as a Windows service.
+echo To stop EVE safely, follow the steps below.
 echo.
 
-echo To stop EVE safely:
+echo -----------------------------------------------------
 echo.
-echo -----------------------------------------------
-echo.
-echo 1. Find the Command Prompt window titled:
+echo 1. Find the window titled:
 echo.
 echo      Start EVE - Evercrew Local AI Operating System
 echo.
@@ -35,7 +33,7 @@ echo 4. If Windows asks:
 echo.
 echo      Terminate batch job (Y/N)?
 echo.
-echo    Press:
+echo    Type:
 echo.
 echo      Y
 echo.
@@ -46,6 +44,8 @@ echo.
 
 echo =====================================================
 echo.
+echo Thank you for using EVE.
+echo.
 echo Need help?
 echo.
 echo Website:
@@ -55,7 +55,7 @@ echo GitHub:
 echo https://github.com/EVE-ECV/EVE
 echo.
 echo Email:
-echo support@evercrew.ai
+echo [support@evercrew.ai](mailto:support@evercrew.ai)
 echo.
 echo =====================================================
 echo.
