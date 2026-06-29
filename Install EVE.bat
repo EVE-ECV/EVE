@@ -258,7 +258,7 @@ echo GitHub:
 echo https://github.com/EVE-ECV/EVE
 echo.
 echo Email:
-echo [support@evercrew.ai](mailto:support@evercrew.ai)
+echo [support@evercrew.ai]
 echo -----------------------------------------------------
 echo.
 
