@@ -35,7 +35,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 Handle the /start command.
 """
 
-```
 await update.message.reply_text(
     f"🤖 EVE v{EVE_VERSION}\n"
     "The Local AI Operating System for SMEs\n\n"
@@ -45,14 +44,12 @@ await update.message.reply_text(
     "To see your Telegram Chat ID, type:\n"
     "ID"
 )
-```
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 """
 Handle normal Telegram messages.
 """
 
-```
 message = update.message.text.strip()
 
 if message.upper() == "ID":
@@ -141,14 +138,12 @@ await update.message.reply_text(
     reply,
     reply_markup=reply_markup
 )
-```
 
 async def handle_confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE):
 """
 Handle Confirm and Cancel button clicks.
 """
 
-```
 query = update.callback_query
 await query.answer()
 
@@ -219,14 +214,12 @@ else:
     reply = "Unknown action."
 
 await query.edit_message_text(reply)
-```
 
 def run_bot():
 """
 Start the Telegram bot.
 """
 
-```
 if not TELEGRAM_BOT_TOKEN:
     raise ValueError(
         "TELEGRAM_BOT_TOKEN is missing. Please update your .env file."
