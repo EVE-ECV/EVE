@@ -62,8 +62,14 @@ exit /b 1
 echo requirements.txt found.
 echo.
 
-echo [4/5] Installing Python packages...
+echo [4/5] Preparing Python...
+
 python -m pip install --upgrade pip
+python -m pip install --upgrade setuptools
+python -m pip install --upgrade wheel
+
+echo.
+echo Installing EVE packages...
 python -m pip install -r requirements.txt
 
 if errorlevel 1 (
